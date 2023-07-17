@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <title>Image Metadata Extraction</title>
+  </head>
+  <body>
+    <form id="imageForm">
+      <label for="imageURL">Image URL:</label>
+      <input type="text" id="imageURL" required />
+      <button type="submit" id="submitButton">Submit</button>
+    </form>
+
+    <div id="imageContainer"></div>
+    <div>
+      <h2>Image Description:</h2>
+      <textarea
+        id="descriptionContainer"
+        rows="20"
+        cols="100"
+        readonly
+      ></textarea>
+    </div>
+
+    <script>
+      document
+        .getElementById("imageForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Prevent the default form submission behavior
+
+          const imgUrl = document.getElementById("imageURL").value.trim();
+          if (imgUrl) {
+            const result = await getImageDetails(imgUrl);
+
+            // Add code to handle the result here
+            if (result) {
+              const formattedResponse = JSON.stringify(result, null, 2);
+
+              const descriptionContainer = document.getElementById(
+                "descriptionContainer"
+              );
+              descriptionContainer.value = formattedResponse;
+            }
+          } else {
+            console.error("Image URL is required.");
+          }
+        });
+
+      async function getImageDetails(imgUrl) {
+        const endpoint =
+          "https://computervisionhttpfunctiontrualinux.azurewebsites.net/api/Function1?code=LFI8n1VQqh1Uz3gLKxvAPT8MUPNYO-71vhRQDnevxwdwAzFuGDxm4A==";
+
+        const body = {
+          imageURL: imgUrl,
+        };
+
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            body: JSON.stringify(body),
+          });
+
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+
+          const result = await response.json();
+          console.log(result); // Make sure the correct data is logged in the console
+          return result;
+        } catch (error) {
+          console.error("Error:", error);
+          return null;
+        }
+      }
+    </script>
+  </body>
+</html>
